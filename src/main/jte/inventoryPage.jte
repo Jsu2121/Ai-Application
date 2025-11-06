@@ -1,3 +1,5 @@
+@param java.util.List<cs3220.aiapplication.model.Ingredient> ingredients
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -196,68 +198,38 @@
             </tr>
             </thead>
             <tbody id="ingredientsBody">
-            <tr>
-                <td>
+            @if( ingredients != null && !ingredients.isEmpty())
+                @for(var ingredient : ingredients)
+                    <tr>
+                        <td>
             <span class="delete-icon">
-                <i class="text-danger fas fa-times">X</i>
+                <i class="text-danger fas fa-times delete-btn">X</i>
             </span>
-                </td>
-                <td><input type="text" name="ingredient1" class="form-control" placeholder="Enter ingredient"></td>
-                <td><input type="text" name="quantity1" class="form-control" placeholder="Enter quantity"></td>
-
-            </tr>
-            <!--    <tr>-->
-            <!--        <td>-->
-            <!--        <span class="delete-icon">-->
-            <!--          <i class="text-danger fas fa-times">X</i> &lt;!&ndash; Font Awesome X icon &ndash;&gt;-->
-            <!--        </span>-->
-            <!--      </td>-->
-            <!--      <td>Item 2</td>-->
-            <!--      <td>Quantity for Item 2</td>-->
-            <!--    </tr>-->
-            <!--    <tr>-->
-            <!--        <td>-->
-            <!--        <span class="delete-icon">-->
-            <!--          <i class="text-danger fas fa-times">X</i> &lt;!&ndash; Font Awesome X icon &ndash;&gt;-->
-            <!--        </span>-->
-            <!--      </td>-->
-            <!--      <td>Item 3</td>-->
-            <!--      <td>Quantity for Item 3</td>-->
-            <!--    </tr>-->
-            <!--    <tr>-->
-            <!--        <td>-->
-            <!--        <span class="delete-icon">-->
-            <!--          <i class="text-danger fas fa-times">X</i> &lt;!&ndash; Font Awesome X icon &ndash;&gt;-->
-            <!--        </span>-->
-            <!--      </td>-->
-            <!--      <td>Item 4</td>-->
-            <!--      <td>Quantity for Item 4</td>-->
-            <!--    </tr>-->
-
-            <!--    <tr>-->
-            <!--        <td>-->
-            <!--        <span class="delete-icon">-->
-            <!--          <i class="text-danger fas fa-times">X</i> &lt;!&ndash; Font Awesome X icon &ndash;&gt;-->
-            <!--        </span>-->
-            <!--      </td>-->
-            <!--      <td>Item 5</td>-->
-            <!--      <td>Quantity for Item 5</td>-->
-            <!--    </tr>-->
-
-            <!--    <tr>-->
-            <!--        <td>-->
-            <!--        <span class="delete-icon">-->
-            <!--          <i class="text-danger fas fa-times">X</i> &lt;!&ndash; Font Awesome X icon &ndash;&gt;-->
-            <!--        </span>-->
-            <!--      </td>-->
-            <!--      <td>Item 6</td>-->
-            <!--      <td>Quantity for Item 6</td>-->
-            <!--    </tr>-->
-
+                        </td>
+                        <td>
+                            <input type="text" name="ingredient{{loop.index}}" class="form-control" value="${ingredient.getName()}">
+                        </td>
+                        <td>
+                               <input type="text" name="quantity{{loop.index}}" class="form-control" value="${ingredient.getQuantity()}">                      </td>
+                    </tr>
+                @endfor
+            @else
+                <tr>
+                    <td>
+        <span class="delete-icon">
+            <i class="text-danger fas fa-times delete-btn">X</i>
+        </span>
+                    </td>
+                    <td><input type="text" name="ingredient1" class="form-control"></td>
+                    <td><input type="text" name="quantity1" class="form-control"></td>
+                </tr>
+            @endif
             </tbody>
+
+
         </table>
-        <button type="button" id="addRow" class="btn btn-primary">Add Item</button>
-        <button type="submit" class="btn btn-success">Save Inventory</button>
+        <a href="/addIngredientPage" class="btn btn-primary">Add Ingredient</a>
+
     </form>
 
 
@@ -297,33 +269,7 @@
     if (toggleBtnMobile) toggleBtnMobile.addEventListener("click", toggleSidebar);
 </script>
 
-<!--add ingredient script-->
-<script>
-    let ingredientCount = 1;
-    document.getElementById("addRow").addEventListener("click", function(){
-        ingredientCount++;
-        const tableBody = document.getElementById("ingredientsBody");
 
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>
-                <span class="delete-icon">
-                    <i class="text-danger fas fa-times delete-btn">X</i>
-                </span>
-            </td>
-            <td><input type="text" name="ingredient${ingredientCount}" class="form-control" placeholder="Enter ingredient"></td>
-            <td><input type="text" name="quantity${ingredientCount}" class="form-control" placeholder="Enter quantity"></td>
-        `;
-        tableBody.appendChild(row);
-    });
-
-    // handle delete button click
-    document.getElementById("ingredientsBody").addEventListener("click", function(event){
-        if(event.target && event.target.classList.contains("delete-btn")){
-            event.target.closest("tr").remove();
-        }
-    });
-</script>
 
 </body>
 </html>
