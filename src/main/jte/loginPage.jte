@@ -70,9 +70,9 @@
 </header>
 <h1>Login</h1>
 
-<form>
-    <label for="email">Email:</label><br />
-    <input type="text" id="email" name="email" size="40" /><br /><br />
+<form method="post" action="/login">
+    <label for="username">Username:</label><br />
+    <input type="text" id="username" name="username" size="40" /><br /><br />
 
     <label for="password">Password:</label><br />
     <input
@@ -81,7 +81,6 @@
             name="password"
             size="40"
     /><br /><br />
-
     <input type="submit" value="Log In" />
 </form>
 

@@ -137,12 +137,12 @@
         <li>
             <a class="nav-link" href="#"><p>Recipe Name 3:<br>Date: xx-xx-xxxx<br>Main Ingredients</p></a>
         </li>
-        <li>
-            <a class="nav-link" href="#"><p>Recipe Name 4:<br>Date: xx-xx-xxxx<br>Main Ingredients</p></a>
-        </li>
+<%--        <li>--%>
+<%--            <a class="nav-link" href="#"><p>Recipe Name 4:<br>Date: xx-xx-xxxx<br>Main Ingredients</p></a>--%>
+<%--        </li>--%>
     </ul>
     <div class="inventory">
-        <a class="btn btn-success btn-lg" href="inventoryPage.html" role="button">Inventory</a>
+        <a class="btn btn-success btn-lg" href="inventory" role="button">Inventory</a>
     </div>
 </div>
 
