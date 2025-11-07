@@ -126,7 +126,7 @@
         <button class="btn btn-outline-dark me-2 " id="toggleSidebar">&#9776;</button>
         <div class="title">
             <img src="images/logo.png" height="40">
-            <a href="homePage.html">Recipe Maker</a>
+            <a href="home">Recipe Maker</a>
         </div>
         <div class="profile">
             <a href="#"><i class="bi bi-person-circle text-dark" ></i></a>
@@ -142,8 +142,8 @@
     <!--    change active over to favorites in favorites.html-->
     <div class="menu-btns">
         <div class="btn-group" role="group" aria-label="Navigation button group">
-            <a href="resultsPage.html" class="btn btn-outline-secondary btn-lg active">History</a>
-            <a href="favoritesPage.html" class="btn btn-outline-secondary btn-lg">Favorites</a>
+            <a href="results" class="btn btn-outline-secondary btn-lg active">History</a>
+            <a href="favorites" class="btn btn-outline-secondary btn-lg">Favorites</a>
         </div>
     </div>
 
@@ -164,7 +164,7 @@
         </li>
     </ul>
     <div class="inventory">
-        <a class="btn btn-success btn-lg" href="inventoryPage.html" role="button">Inventory</a>
+        <a class="btn btn-success btn-lg" href="inventory" role="button">Inventory</a>
     </div>
 </div>
 

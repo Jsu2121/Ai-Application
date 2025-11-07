@@ -70,7 +70,7 @@
 
 <!-- main -->
 <main class="container-fluid px-4 py-4">
-    <img src="images/logo.png" id="logo" />
+    <img src="...images/logo.png" id="logo" />
     <div>
         <h3>About Us</h3>
         <p>

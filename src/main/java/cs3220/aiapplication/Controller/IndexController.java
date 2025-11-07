@@ -37,75 +37,24 @@ public class IndexController {
         return "inventoryPage";
     }
 
-    @GetMapping("/addIngredientPage")
-    public String addIngredientPage() {
-        if(!userBean.isLoggedIn()) {
+    @GetMapping("/results")
+    public String resultsPage(){
+        if(!userBean.isLoggedIn()){
             return "redirect:/login";
         }
-        return "addIngredient";
+
+        return "resultsPage";
     }
 
-    @PostMapping("/addIngredientPage")
-    public String addIngredient(@RequestParam("name") String name, @RequestParam("quantity") String quantity) {
-        User currUser = userBean.getUser();
-        if (currUser == null) {
+    @GetMapping("/favorites")
+    public String favoritesPage(){
+        if(!userBean.isLoggedIn()){
             return "redirect:/login";
-        } else {
-            dataStore.addIngredient(currUser.getId(), new Ingredient(name, quantity));
         }
-
-        return "redirect:/inventory";
+        return "favoritePage";
     }
 
 
-    @GetMapping("/edit/{id}")
-    public String editIngredient(Model model, @PathVariable("id") Integer id){
-        if(!userBean.isLoggedIn()) {
-            return "redirect:/login";
-        }
-        User user =  userBean.getUser();
-        if(user == null){
-            return "redirect:/inventory";
-        }
-        Ingredient ingredient = dataStore.getIngredient(user.getId())
-                .stream()
-                .filter(i -> i.getId() == id)
-                .findFirst()
-                .orElse(null);
-        if(ingredient == null){
-            return "redirect:/inventory";
-        }
-        model.addAttribute("ingredient", ingredient);
-        return "editInventory";
-    }
-
-    @PostMapping("/edit/{id}")
-    public String editIngredientPost(@PathVariable("id") Integer id, @RequestParam("name") String name, @RequestParam("quantity") String quantity) {
-        if (!userBean.isLoggedIn()) {
-            return "redirect:/login";
-        }
-        User user = userBean.getUser();
-
-        Ingredient ingredient = dataStore.getIngredient(user.getId()).stream().filter(i -> i.getId() == id).findFirst().orElse(null);
-        if (ingredient == null) {
-            return "redirect:/inventory";
-        } else {
-            ingredient.setName(name);
-            ingredient.setQuantity(quantity);
-            return "redirect:/inventory";
-        }
-    }
-
-        @GetMapping("/delete/{id}")
-        public String deleteIngredient(@PathVariable("id") Integer id){
-            if(!userBean.isLoggedIn()){
-                return "redirect:/login";
-            }
-            User user = userBean.getUser();
-            dataStore.deleteIngredient(user.getId(), id);
-            return "redirect:/inventory";
-
-        }
 
 
 }

@@ -2,15 +2,13 @@ package cs3220.aiapplication.model;
 
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class DataStore {
-    private List<User> users;
-    private Map<Integer, List<Ingredient>> userIngredients;
+    private final List<User> users;
+    private final Map<Integer, List<Ingredient>> userIngredients;
+    private final Map<Integer, List<String>> exchangeHistory = new HashMap<>();
     private int index = 1;
 
     public DataStore() {
@@ -62,7 +60,18 @@ public class DataStore {
         }
     }
 
+    public void saveExchange(int userId, String exchange){
+        List<String> exchanges = exchangeHistory.computeIfAbsent(userId, k -> new ArrayList<>());
+        exchanges.add(exchange);
+    }
 
+    public List<String> getExchanges(int userId){
+        List<String> exchanges = exchangeHistory.get(userId);
+        if(exchanges == null){
+            return Collections.emptyList();
+        }
+        return new ArrayList<>(exchanges);
+    }
 
 
 }
