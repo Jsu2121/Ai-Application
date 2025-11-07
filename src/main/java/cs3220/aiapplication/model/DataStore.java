@@ -11,6 +11,7 @@ import java.util.Map;
 public class DataStore {
     private List<User> users;
     private Map<Integer, List<Ingredient>> userIngredients;
+    private int index = 1;
 
     public DataStore() {
         users = new ArrayList<>();
@@ -39,12 +40,29 @@ public class DataStore {
         return userIngredients.getOrDefault(userId, new ArrayList<>());
     }
 
-    public void addIngredient(int userId, Ingredient ingredient) {
-        userIngredients.computeIfAbsent(userId, k -> new ArrayList<>()).add(ingredient);
-    }
 
     public void setIngredients(int userId, List<Ingredient> ingredients) {
         userIngredients.put(userId, ingredients);
     }
+
+    public void addIngredient(int userId, Ingredient ingredient){
+        List<Ingredient> ingredients = userIngredients.computeIfAbsent(userId, k -> new ArrayList<>());
+        if (ingredients.isEmpty()) {
+            index = 1;
+        }
+
+        ingredient.setId(index++);
+        ingredients.add(ingredient);
+    }
+
+    public void deleteIngredient(int userId, int ingredientId){
+        List<Ingredient> ingredients = getIngredient(userId);
+        if(ingredients !=null){
+            ingredients.removeIf(i -> i.getId() == ingredientId);
+        }
+    }
+
+
+
 
 }

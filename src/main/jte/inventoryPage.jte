@@ -190,40 +190,35 @@
 <main id="content" class="content p-4 d-flex flex-column justify content-center align-items-center">
     <h1>Ingredients</h1>
     <form id="inventoryForm" action="inventory" method="post">
+        @if( ingredients != null && !ingredients.isEmpty())
         <table id="ingredientsTable" class="table table-hover table-bordered table-striped">
             <thead>
             <tr>
                 <th></th>
                 <th>Ingredient</th>
                 <th>Quantity</th>
+                <th>Options</th>
             </tr>
             </thead>
             <tbody id="ingredientsBody">
-            @if( ingredients != null && !ingredients.isEmpty())
-                @for(var ingredient : ingredients)
+
+                @for(int i = 0; i < ingredients.size(); i++)
                     <tr>
+<%--                        unique ingredient number starting from 1--%>
                         <td>
-            <span class="delete-icon">
-                <i class="text-danger fas fa-times delete-btn">X</i>
-            </span>
+                            ${i + 1}.
                         </td>
                         <td>
-                            <input type="text" name="ingredient{{loop.index}}" class="form-control" value="${ingredient.getName()}">
+                          ${ingredients.get(i).getName()}
                         </td>
                         <td>
-                               <input type="text" name="quantity{{loop.index}}" class="form-control" value="${ingredient.getQuantity()}">                      </td>
+                               ${ingredients.get(i).getQuantity()}
+                        </td>
+                        <td><a href="edit/${ingredients.get(i).getId()}">Edit</a> | <a href="delete/${ingredients.get(i).getId()}" onclick="return confirm('Are you sure you want to Delete?');">Delete</a></td>
                     </tr>
                 @endfor
             @else
-                <tr>
-                    <td>
-        <span class="delete-icon">
-            <i class="text-danger fas fa-times delete-btn">X</i>
-        </span>
-                    </td>
-                    <td><input type="text" name="ingredient1" class="form-control"></td>
-                    <td><input type="text" name="quantity1" class="form-control"></td>
-                </tr>
+                <div class="centered-text-div"> No Ingredients added...</div><br>
             @endif
             </tbody>
 
