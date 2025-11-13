@@ -29,7 +29,7 @@ public class DataStore {
 
     public User getUserByCredentials(String username, String password) {
         return users.stream()
-                .filter(u -> u.getUsername().equals(username) && u.getPassword().equals(password))
+                .filter(u -> u.getEmail().equals(username) && u.getPassword().equals(password))
                 .findFirst()
                 .orElse(null);
     }

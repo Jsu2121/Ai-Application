@@ -109,7 +109,7 @@
             <a href="home">Recipe Maker</a>
         </div>
         <div class="profile">
-            <a href="#"><i class="bi bi-person-circle text-dark" ></i></a>
+            <a href="profile"><i class="bi bi-person-circle text-dark" ></i></a>
         </div>
     </div>
 </header>

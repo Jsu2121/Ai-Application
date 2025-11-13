@@ -54,6 +54,40 @@ public class IndexController {
         return "favoritePage";
     }
 
+    @GetMapping("/profile")
+    public String profilePage(Model model){
+        if(!userBean.isLoggedIn()) {
+            return "redirect:/login";
+        } else {
+            User user = userBean.getUser();
+            model.addAttribute("user", user);
+            model.addAttribute("exchangeHistory", userBean.getExchangeHistory());
+            model.addAttribute("ingredientCount", dataStore.getIngredient(user.getId()).size());
+            return "userProfile";
+        }
+    }
+
+    @GetMapping("/changeUsername")
+    public String changeUsernamePage(){
+        if (!userBean.isLoggedIn()) {
+            return "redirect:/login";
+        } else {
+            return "changeUsernamePage";
+        }
+    }
+
+    @PostMapping("/changeUsername")
+    public String changeUsername(@RequestParam("username") String username){
+        if(!userBean.isLoggedIn()) {
+            return "redirect:/login";
+        }else{
+            User user = userBean.getUser();
+            user.setUsername(username);
+
+            return "redirect:/profile";
+        }
+    }
+
 
 
 
