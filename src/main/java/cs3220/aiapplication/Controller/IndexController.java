@@ -6,10 +6,7 @@ import cs3220.aiapplication.model.UserBean;
 import cs3220.aiapplication.model.DataStore;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class IndexController {
@@ -26,10 +23,6 @@ public class IndexController {
         return "landingPage";
     }
 
-    @GetMapping("/home")
-    public String homePage() {
-        return "homePage";
-    }
 
     @GetMapping("/inventory")
     public String inventoryPage(Model model) {
@@ -40,26 +33,62 @@ public class IndexController {
         return "inventoryPage";
     }
 
-    @GetMapping("/addIngredientPage")
-    public String addIngredientPage() {
+    @GetMapping("/results")
+    public String resultsPage(){
+        if(!userBean.isLoggedIn()){
+            return "redirect:/login";
+        }
+
+        return "resultsPage";
+    }
+
+    @GetMapping("/favorites")
+    public String favoritesPage(){
+        if(!userBean.isLoggedIn()){
+            return "redirect:/login";
+        }
+        return "favoritePage";
+    }
+
+    @GetMapping("/profile")
+    public String profilePage(Model model){
         if(!userBean.isLoggedIn()) {
             return "redirect:/login";
+        } else {
+            User user = userBean.getUser();
+            model.addAttribute("user", user);
+            model.addAttribute("exchangeHistory", userBean.getExchangeHistory());
+            model.addAttribute("ingredientCount", dataStore.getIngredient(user.getId()).size());
+            return "userProfile";
         }
-        return "addIngredient";
     }
 
-    @PostMapping("/addIngredientPage")
-    public String addIngredient(@RequestParam("name") String name, @RequestParam("quantity") String quantity) {
-        User currUser = userBean.getUser();
-        if (currUser == null) {
+    @GetMapping("/changeUsername")
+    public String changeUsernamePage(){
+        if (!userBean.isLoggedIn()) {
             return "redirect:/login";
         } else {
-            dataStore.addIngredient(currUser.getId(), new Ingredient(name, quantity));
+            return "changeUsernamePage";
         }
-
-        return "redirect:/inventory";
     }
+
+    @PostMapping("/changeUsername")
+    public String changeUsername(@RequestParam("username") String username){
+        if(!userBean.isLoggedIn()) {
+            return "redirect:/login";
+        }else{
+            User user = userBean.getUser();
+            user.setUsername(username);
+
+            return "redirect:/profile";
+        }
+    }
+
 
 
 
 }
+
+
+
+

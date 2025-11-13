@@ -1,3 +1,5 @@
+@param java.util.List<cs3220.aiapplication.model.Recipe> recipes
+@param java.util.List<cs3220.aiapplication.model.Recipe> favorites
 <!doctype html>
 <html lang="en">
 <head>
@@ -106,10 +108,10 @@
         <button class="btn btn-outline-dark me-2 " id="toggleSidebar">&#9776;</button>
         <div class="title">
             <img src="images/logo.png" height="40">
-            <a href="homePage.html">Recipe Maker</a>
+            <a href="home">Recipe Maker</a>
         </div>
         <div class="profile">
-            <a href="#"><i class="bi bi-person-circle text-dark" ></i></a>
+            <a href="profile"><i class="bi bi-person-circle text-dark" ></i></a>
         </div>
     </div>
 </header>
@@ -121,25 +123,21 @@
     </div>
     <div class="menu-btns">
         <div class="btn-group" role="group" aria-label="Navigation button group">
-            <a href="resultsPage.html" class="btn btn-outline-secondary btn-lg">History</a>
-            <a href="favoritesPage.html" class="btn btn-outline-secondary btn-lg">Favorites</a>
+            <a href="results" class="btn btn-outline-secondary btn-lg">History</a>
+            <a href="favorites" class="btn btn-outline-secondary btn-lg">Favorites</a>
         </div>
     </div>
     <h6 class="mt-3">Recent Recipes</h6>
     <!--    similar to Lab6 create a List of History and load them using for loop-->
     <ul class="history-item">
-        <li>
-            <a class="nav-link" href="#"><p>Recipe Name 1:<br>Date: xx-xx-xxxx<br>Main Ingredients</p></a>
-        </li>
-        <li>
-            <a class="nav-link" href="#"><p>Recipe Name 2:<br>Date: xx-xx-xxxx<br>Main Ingredients</p></a>
-        </li>
-        <li>
-            <a class="nav-link" href="#"><p>Recipe Name 3:<br>Date: xx-xx-xxxx<br>Main Ingredients</p></a>
-        </li>
-<%--        <li>--%>
-<%--            <a class="nav-link" href="#"><p>Recipe Name 4:<br>Date: xx-xx-xxxx<br>Main Ingredients</p></a>--%>
-<%--        </li>--%>
+        @for(var recipe: recipes)
+            <li>
+                <strong>${recipe.getTitle()}</strong><br>
+                Date: ${recipe.getDate().toString()}<br>
+                ${recipe.getContent()}<br>
+                <small>${recipe.getId()}</small>
+            </li>
+        @endfor
     </ul>
     <div class="inventory">
         <a class="btn btn-success btn-lg" href="inventory" role="button">Inventory</a>
@@ -150,11 +148,11 @@
 <main id="content" class="content p-4 d-flex flex-column justify-content-center align-items-center" style="min-height: 80vh;">
     <!-- Chat box -->
     <!--    chat box form-->
-    <form action="#" method="post" class="w-100" style="max-width: 600px;">
+    <form action="/home" method="post" class="w-100" style="max-width: 600px;">
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="What's for dinner?">
+            <input type="text" name="prompt" class="form-control" placeholder="What's for dinner?">
             <!-- button link to resultsPage-->
-            <a href="resultsPage.html" class="btn btn-success" type="button">&rarr;</a>
+           <button class="btn btn-success" type="submit">&rarr;</button>
 
         </div>
         <!--        center-->

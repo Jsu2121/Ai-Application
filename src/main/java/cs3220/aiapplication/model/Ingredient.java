@@ -1,17 +1,24 @@
 package cs3220.aiapplication.model;
 
 public class Ingredient {
+    private int id;
     private String name;
     private String quantity;
     public Ingredient() {
     }
 
+    public Ingredient(int id, String name, String quantity) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+    }
     public Ingredient(String name, String quantity) {
         this.name = name;
         this.quantity = quantity;
     }
 
     public String getName() {
+
         return name;
     }
     public void setName(String name) {
@@ -23,4 +30,13 @@ public class Ingredient {
     public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 }

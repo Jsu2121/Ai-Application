@@ -145,10 +145,10 @@
         <button class="btn btn-outline-dark me-2 " id="toggleSidebar">&#9776;</button>
         <div class="title">
             <img src="images/logo.png" height="40">
-            <a href="homePage.html">Recipe Maker</a>
+            <a href="home">Recipe Maker</a>
         </div>
         <div class="profile">
-            <a href="#"><i class="bi bi-person-circle text-dark" ></i></a>
+            <a href="profile"><i class="bi bi-person-circle text-dark" ></i></a>
         </div>
     </div>
 </header>
@@ -161,8 +161,8 @@
     <!--    change active over to favorites in favorites.html-->
     <div class="menu-btns">
         <div class="btn-group" role="group" aria-label="Navigation button group">
-            <a href="resultsPage.html" class="btn btn-outline-secondary btn-lg active">History</a>
-            <a href="favoritesPage.html" class="btn btn-outline-secondary btn-lg">Favorites</a>
+            <a href="results" class="btn btn-outline-secondary btn-lg active">History</a>
+            <a href="favorites" class="btn btn-outline-secondary btn-lg">Favorites</a>
         </div>
     </div>
 
@@ -183,47 +183,42 @@
         </li>
     </ul>
     <div class="inventory">
-        <a class="btn btn-success btn-lg" href="inventoryPage.html" role="button">Inventory</a>
+        <a class="btn btn-success btn-lg" href="inventory" role="button">Inventory</a>
     </div>
 </div>
 
 <main id="content" class="content p-4 d-flex flex-column justify content-center align-items-center">
     <h1>Ingredients</h1>
     <form id="inventoryForm" action="inventory" method="post">
+        @if( ingredients != null && !ingredients.isEmpty())
         <table id="ingredientsTable" class="table table-hover table-bordered table-striped">
             <thead>
             <tr>
                 <th></th>
                 <th>Ingredient</th>
                 <th>Quantity</th>
+                <th>Options</th>
             </tr>
             </thead>
             <tbody id="ingredientsBody">
-            @if( ingredients != null && !ingredients.isEmpty())
-                @for(var ingredient : ingredients)
+
+                @for(int i = 0; i < ingredients.size(); i++)
                     <tr>
+<%--                        unique ingredient number starting from 1--%>
                         <td>
-            <span class="delete-icon">
-                <i class="text-danger fas fa-times delete-btn">X</i>
-            </span>
+                            ${i + 1}.
                         </td>
                         <td>
-                            <input type="text" name="ingredient{{loop.index}}" class="form-control" value="${ingredient.getName()}">
+                          ${ingredients.get(i).getName()}
                         </td>
                         <td>
-                               <input type="text" name="quantity{{loop.index}}" class="form-control" value="${ingredient.getQuantity()}">                      </td>
+                               ${ingredients.get(i).getQuantity()}
+                        </td>
+                        <td><a href="edit/${ingredients.get(i).getId()}">Edit</a> | <a href="delete/${ingredients.get(i).getId()}" onclick="return confirm('Are you sure you want to Delete?');">Delete</a></td>
                     </tr>
                 @endfor
             @else
-                <tr>
-                    <td>
-        <span class="delete-icon">
-            <i class="text-danger fas fa-times delete-btn">X</i>
-        </span>
-                    </td>
-                    <td><input type="text" name="ingredient1" class="form-control"></td>
-                    <td><input type="text" name="quantity1" class="form-control"></td>
-                </tr>
+                <div class="centered-text-div"> No Ingredients added...</div><br>
             @endif
             </tbody>
 
