@@ -1,3 +1,5 @@
+@param java.util.List<cs3220.aiapplication.model.Recipe> recipes
+@param java.util.List<cs3220.aiapplication.model.Recipe> favorites
 <!doctype html>
 <html lang="en">
 <head>
@@ -128,18 +130,14 @@
     <h6 class="mt-3">Recent Recipes</h6>
     <!--    similar to Lab6 create a List of History and load them using for loop-->
     <ul class="history-item">
-        <li>
-            <a class="nav-link" href="#"><p>Recipe Name 1:<br>Date: xx-xx-xxxx<br>Main Ingredients</p></a>
-        </li>
-        <li>
-            <a class="nav-link" href="#"><p>Recipe Name 2:<br>Date: xx-xx-xxxx<br>Main Ingredients</p></a>
-        </li>
-        <li>
-            <a class="nav-link" href="#"><p>Recipe Name 3:<br>Date: xx-xx-xxxx<br>Main Ingredients</p></a>
-        </li>
-<%--        <li>--%>
-<%--            <a class="nav-link" href="#"><p>Recipe Name 4:<br>Date: xx-xx-xxxx<br>Main Ingredients</p></a>--%>
-<%--        </li>--%>
+        @for(var recipe: recipes)
+            <li>
+                <strong>${recipe.getTitle()}</strong><br>
+                Date: ${recipe.getDate().toString()}<br>
+                ${recipe.getContent()}<br>
+                <small>${recipe.getId()}</small>
+            </li>
+        @endfor
     </ul>
     <div class="inventory">
         <a class="btn btn-success btn-lg" href="inventory" role="button">Inventory</a>
@@ -150,11 +148,11 @@
 <main id="content" class="content p-4 d-flex flex-column justify-content-center align-items-center" style="min-height: 80vh;">
     <!-- Chat box -->
     <!--    chat box form-->
-    <form action="#" method="post" class="w-100" style="max-width: 600px;">
+    <form action="/home" method="post" class="w-100" style="max-width: 600px;">
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="What's for dinner?">
+            <input type="text" name="prompt" class="form-control" placeholder="What's for dinner?">
             <!-- button link to resultsPage-->
-            <a href="resultsPage.html" class="btn btn-success" type="button">&rarr;</a>
+           <button class="btn btn-success" type="submit">&rarr;</button>
 
         </div>
         <!--        center-->

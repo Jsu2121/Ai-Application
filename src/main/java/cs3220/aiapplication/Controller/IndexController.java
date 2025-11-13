@@ -23,10 +23,6 @@ public class IndexController {
         return "landingPage";
     }
 
-    @GetMapping("/home")
-    public String homePage() {
-        return "homePage";
-    }
 
     @GetMapping("/inventory")
     public String inventoryPage(Model model) {

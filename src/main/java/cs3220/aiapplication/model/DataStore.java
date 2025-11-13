@@ -9,6 +9,7 @@ public class DataStore {
     private final List<User> users;
     private final Map<Integer, List<Ingredient>> userIngredients;
     private final Map<Integer, List<String>> exchangeHistory = new HashMap<>();
+    private final Map<Integer, List<Recipe>> userRecipes = new HashMap<>();
     private int index = 1;
 
     public DataStore() {
@@ -71,6 +72,45 @@ public class DataStore {
             return Collections.emptyList();
         }
         return new ArrayList<>(exchanges);
+    }
+
+    public int getNextRecipeId(){
+        return index++;
+    }
+
+    public void addRecipe(int userId, Recipe recipe){
+        userRecipes.computeIfAbsent(userId, k -> new ArrayList<>()).add(recipe);
+
+    }
+
+    public List<Recipe> getRecipes(int userId){
+        return userRecipes.getOrDefault(userId, new ArrayList<>());
+
+    }
+
+    public void deleteRecipe(int userId, int recipeId){
+        userRecipes.getOrDefault(userId, new ArrayList<>()).removeIf(r -> r.getId() == recipeId);
+
+    }
+
+    public void makeFavorite(int userId, int recipeId){
+        for(Recipe r : getRecipes(userId)){
+            if(r.getId() == recipeId){
+                r.setFavorite(!r.isFavorite());
+                break;
+            }
+        }
+    }
+
+    public List<Recipe> getFavorites(int userId){
+        return getRecipes(userId).stream().filter(Recipe::isFavorite).toList();
+    }
+
+    public Recipe getRecipeById(int userId, int recipeId) {
+        return getRecipes(userId).stream()
+                .filter(r -> r.getId() == recipeId)
+                .findFirst()
+                .orElse(null);
     }
 
 
