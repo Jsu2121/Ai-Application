@@ -1,5 +1,6 @@
 @param java.util.List<cs3220.aiapplication.model.Recipe> recipes
 @param java.util.List<cs3220.aiapplication.model.Recipe> favorites
+@param String tab
 <!doctype html>
 <html lang="en">
 <head>
@@ -62,6 +63,9 @@
             border-radius: 10px;
             padding: 10px;
             margin-top: 10px;
+            max-height:300px;
+            overflow-y:auto;
+            padding-right: 5px;
         }
 
         .sidebar {
@@ -70,6 +74,10 @@
             background-color: lightgray;
             color: black;
             border-right: black 2px solid;
+
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x:hidden;
         }
         .sidebar.collapsed {
             margin-left: -250px;
@@ -123,21 +131,45 @@
     </div>
     <div class="menu-btns">
         <div class="btn-group" role="group" aria-label="Navigation button group">
-            <a href="results" class="btn btn-outline-secondary btn-lg">History</a>
-            <a href="favorites" class="btn btn-outline-secondary btn-lg">Favorites</a>
+            <a href="/home?tab=history" class="btn btn-outline-secondary btn-lg">History</a>
+            <a href="/home?tab=favorites" class="btn btn-outline-secondary btn-lg">Favorites</a>
         </div>
     </div>
     <h6 class="mt-3">Recent Recipes</h6>
     <!--    similar to Lab6 create a List of History and load them using for loop-->
     <ul class="history-item">
-        @for(var recipe: recipes)
-            <li>
+        @if(tab.equals("favorites"))
+
+        @if(favorites.isEmpty())
+            <li>No Recept Recipes...</li>
+        @endif
+        @for(var recipe: favorites)
+            <a href="viewRecipe?id=${recipe.getId()}" class="nav-link">
+            <div>
+                <small>#${recipe.getId()}</small>
                 <strong>${recipe.getTitle()}</strong><br>
                 Date: ${recipe.getDate().toString()}<br>
-                ${recipe.getContent()}<br>
-                <small>${recipe.getId()}</small>
-            </li>
+                Main Ingredients: ${recipe.getMainIngredients()}
+            </div>
+            </a>
+            <br>
         @endfor
+        @elseif(tab.equals("history"))
+        @if(recipes.isEmpty())
+            <li>No Recept Recipes...</li>
+        @endif
+        @for(var recipe: recipes)
+            <a href="viewRecipe?id=${recipe.getId()}" class="nav-link">
+                <div>
+                    <small>#${recipe.getId()}</small>
+                    <strong>${recipe.getTitle()}</strong><br>
+                    Date: ${recipe.getDate().toString()}<br>
+                    Main Ingredients: ${recipe.getMainIngredients()}
+                </div>
+            </a>
+            <br>
+        @endfor
+        @endif
     </ul>
     <div class="inventory">
         <a class="btn btn-success btn-lg" href="inventory" role="button">Inventory</a>
@@ -148,33 +180,28 @@
 <main id="content" class="content p-4 d-flex flex-column justify-content-center align-items-center" style="min-height: 80vh;">
     <!-- Chat box -->
     <!--    chat box form-->
+<%--    send to viewRecipe.jte but also update in home, results, and favorites--%>
     <form action="/home" method="post" class="w-100" style="max-width: 600px;">
         <div class="input-group">
             <input type="text" name="prompt" class="form-control" placeholder="What's for dinner?">
-            <!-- button link to resultsPage-->
-           <button class="btn btn-success" type="submit">&rarr;</button>
-
+            <button class="btn btn-success" type="submit">&rarr;</button>
         </div>
-        <!--        center-->
-        <div class="cooking-level mt-3 text-center">
+
+        <!-- NEW: Radio Buttons Below -->
+        <div class="mt-3 d-flex justify-content-center gap-4">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="level" id="beginner" value="beginner">
+                <label class="form-check-label" for="beginner">Beginner</label>
+            </div>
 
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                <label class="form-check-label" for="inlineRadio1">Beginner</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                <label class="form-check-label" for="inlineRadio2">Expert</label>
+                <input class="form-check-input" type="radio" name="level" id="expert" value="expert">
+                <label class="form-check-label" for="expert">Expert</label>
             </div>
         </div>
     </form>
 
-    <!-- Placeholder for AI results
-    <div class="results">
-        <h2>Suggested Recipes</h2>
-        <p>Results will show here...</p>
-    </div>
-    -->
+
 </main>
 
 <script>

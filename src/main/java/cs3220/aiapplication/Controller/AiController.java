@@ -1,9 +1,6 @@
 package cs3220.aiapplication.Controller;
 
-import cs3220.aiapplication.model.DataStore;
-import cs3220.aiapplication.model.Exchange;
-import cs3220.aiapplication.model.Recipe;
-import cs3220.aiapplication.model.UserBean;
+import cs3220.aiapplication.model.*;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
@@ -56,37 +53,44 @@ public class AiController {
 
 
     @GetMapping("/home")
-    public String showHomePage(Model model){
+    public String showHomePage(@RequestParam(value="tab", defaultValue="history") String tab, Model model){
         if(!userBean.isLoggedIn()) {
             return "redirect:/login";
 
-        } else {
+        }
             int userId = userBean.getUser().getId();
+        // send homepage what tab we are in
+            model.addAttribute("tab", tab);
             model.addAttribute("recipes", dataStore.getRecipes(userId));
             model.addAttribute("favorites", dataStore.getFavorites(userId));
             return "homePage";
-        }
+
     }
 
     @PostMapping("/home")
-    public String homePrompt(@RequestParam("prompt") String prompt, Model model){
+    public String homePrompt(@RequestParam("prompt") String prompt, @RequestParam(value="level", required =false) String level, Model model){
         if(!userBean.isLoggedIn()){
             return "redirect:/login";
         }
 
         int userId = userBean.getUser().getId();
-        var ingredients = dataStore.getIngredient(userId);
+        List<String> ingredientsName = dataStore.getIngredient(userId).stream().map(Ingredient::getName).toList();
 
-        String userPrompt = "Using these ingredients: " + ingredients.toString() +
+
+        String cookingLevel = (level == null) ?"beginner": level;
+        System.out.println("Ingredients: " + ingredientsName);
+        String ingredients = String.join(", ", ingredientsName);
+        System.out.println("Ingredients String: " + ingredients);
+        String userPrompt = "Using these ingredients: " + ingredients +
                 ", " +  prompt +
-                ". Generate a recipe with a title, a list of main ingredients, and instructions.";
+                ". Generate a recipe with suitable for a " + cookingLevel + " cook. " + "Include a clear a title, a list of main ingredients, and instructions. (Format the response with 'Title: <title>', 'Main Ingredients:', and 'Instructions:')";
 
         String aiResponse = realChat(userPrompt);
+        String mainIngredients = aiResponse.lines().filter(line -> line.startsWith("Main Ingredients:")).findFirst().orElse("Main Ingredients: Not found").replace("Main Ingredients:", ""
+                ).trim();
 
         String title = aiResponse.lines().findFirst().orElse("Untitled Recipe").replace("Title: ", ""
                 ).trim();
-
-
 
         Recipe recipe = new Recipe(
                 dataStore.getNextRecipeId(),
@@ -94,6 +98,7 @@ public class AiController {
                 title,
                 java.time.LocalTime.now(),
                 prompt,
+                mainIngredients,
                 aiResponse,
                 false
         );
@@ -106,8 +111,11 @@ public class AiController {
         model.addAttribute("favorites", dataStore.getFavorites(userId));
         model.addAttribute("aiResponse", aiResponse);
 
-        return "homePage";
+
+        return "redirect:/viewRecipe?id=" + recipe.getId();
     }
+
+
 
 
 

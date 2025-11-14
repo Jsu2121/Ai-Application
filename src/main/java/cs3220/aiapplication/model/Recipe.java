@@ -9,6 +9,7 @@ public class Recipe {
     private LocalTime date;
     private String prompt;
     private String content;
+    private String mainIngredients;
     private boolean favorite;
 
     public LocalTime getDate() {
@@ -19,12 +20,21 @@ public class Recipe {
         this.date = date;
     }
 
-    public Recipe(int id, int userId, String title, LocalTime date, String prompt, String content, boolean favorite) {
+    public String getMainIngredients() {
+        return mainIngredients;
+    }
+
+    public void setMainIngredients(String mainIngredients) {
+        this.mainIngredients = mainIngredients;
+    }
+
+    public Recipe(int id, int userId, String title, LocalTime date, String prompt, String mainIngredients, String content, boolean favorite) {
         this.id = id;
         this.userId = userId;
         this.title = title;
         this.date = date;
         this.prompt = prompt;
+        this.mainIngredients = mainIngredients;
         this.content = content;
         this.favorite = favorite;
     }

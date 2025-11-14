@@ -10,17 +10,18 @@ public class DataStore {
     private final Map<Integer, List<Ingredient>> userIngredients;
     private final Map<Integer, List<String>> exchangeHistory = new HashMap<>();
     private final Map<Integer, List<Recipe>> userRecipes = new HashMap<>();
+
     private int index = 1;
 
     public DataStore() {
         users = new ArrayList<>();
-    users.add(new User(1, "root", "1234"));
-    users.add(new User(2, "guest", "1234"));
-    userIngredients = new HashMap<>();
+        users.add(new User(1, "root@example.com", "1234"));
+        users.add(new User(2, "guest@example.com", "1234"));
+        userIngredients = new HashMap<>();
 
-    for(User u : users){
-        userIngredients.put(u.getId(), new ArrayList<>());
-    }
+        for(User u : users){
+            userIngredients.put(u.getId(), new ArrayList<>());
+        }
     }
 
 
@@ -93,12 +94,10 @@ public class DataStore {
 
     }
 
-    public void makeFavorite(int userId, int recipeId){
-        for(Recipe r : getRecipes(userId)){
-            if(r.getId() == recipeId){
-                r.setFavorite(!r.isFavorite());
-                break;
-            }
+    public void toggleFavorite(int userId, int recipeId){
+        Recipe recipe = getRecipeById(userId, recipeId);
+        if(recipe !=null){
+            recipe.setFavorite(!recipe.isFavorite());
         }
     }
 

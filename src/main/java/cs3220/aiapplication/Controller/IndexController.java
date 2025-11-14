@@ -1,9 +1,6 @@
 package cs3220.aiapplication.Controller;
 
-import cs3220.aiapplication.model.Ingredient;
-import cs3220.aiapplication.model.User;
-import cs3220.aiapplication.model.UserBean;
-import cs3220.aiapplication.model.DataStore;
+import cs3220.aiapplication.model.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,29 +22,49 @@ public class IndexController {
 
 
     @GetMapping("/inventory")
-    public String inventoryPage(Model model) {
-        if(!userBean.isLoggedIn()) {
+    public String inventoryPage(
+            @RequestParam(value = "tab", defaultValue = "history") String tab,
+            Model model
+    ) {
+        if (!userBean.isLoggedIn()) {
             return "redirect:/login";
         }
-        model.addAttribute("ingredients", dataStore.getIngredient(userBean.getUser().getId()));
+
+        int userId = userBean.getUser().getId();
+
+        model.addAttribute("ingredients", dataStore.getIngredient(userId));
+        model.addAttribute("recipes", dataStore.getRecipes(userId));
+        model.addAttribute("favorites", dataStore.getFavorites(userId));
+        model.addAttribute("tab", tab);
+
         return "inventoryPage";
     }
 
-    @GetMapping("/results")
-    public String resultsPage(){
-        if(!userBean.isLoggedIn()){
-            return "redirect:/login";
-        }
 
-        return "resultsPage";
+    @GetMapping("/results")
+    public String resultsPage(Model model){
+        if(!userBean.isLoggedIn()) {
+            return "redirect:/login";
+
+        } else {
+            int userId = userBean.getUser().getId();
+            model.addAttribute("recipes", dataStore.getRecipes(userId));
+            model.addAttribute("favorites", dataStore.getFavorites(userId));
+            return "resultsPage";
+        }
     }
 
     @GetMapping("/favorites")
-    public String favoritesPage(){
-        if(!userBean.isLoggedIn()){
+    public String favoritesPage(Model model){
+        if(!userBean.isLoggedIn()) {
             return "redirect:/login";
+
+        } else {
+            int userId = userBean.getUser().getId();
+            model.addAttribute("recipes", dataStore.getRecipes(userId));
+            model.addAttribute("favorites", dataStore.getFavorites(userId));
+            return "favoritePage";
         }
-        return "favoritePage";
     }
 
     @GetMapping("/profile")
@@ -57,7 +74,8 @@ public class IndexController {
         } else {
             User user = userBean.getUser();
             model.addAttribute("user", user);
-            model.addAttribute("exchangeHistory", userBean.getExchangeHistory());
+            model.addAttribute("recipeHistory", dataStore.getRecipes(user.getId()));
+            model.addAttribute("favoriteHistory", dataStore.getFavorites(user.getId()));
             model.addAttribute("ingredientCount", dataStore.getIngredient(user.getId()).size());
             return "userProfile";
         }
@@ -73,15 +91,54 @@ public class IndexController {
     }
 
     @PostMapping("/changeUsername")
-    public String changeUsername(@RequestParam("username") String username){
-        if(!userBean.isLoggedIn()) {
+    public String changeUsername(@RequestParam("username") String username) {
+        if (!userBean.isLoggedIn()) {
             return "redirect:/login";
-        }else{
+        } else {
             User user = userBean.getUser();
             user.setUsername(username);
 
             return "redirect:/profile";
         }
+    }
+        @GetMapping("/viewRecipe")
+        public String viewRecipe(@RequestParam(value="tab", defaultValue="history") String tab, @RequestParam("id") int id, Model model){
+            if(!userBean.isLoggedIn()){
+                return "redirect:/login";
+            }
+
+            int userId = userBean.getUser().getId();
+            Recipe recipe = dataStore.getRecipes(userId).stream().filter(r -> r.getId() ==id).findFirst().orElse(null);
+
+            if(recipe==null){
+                return "redirect:/home";
+            }
+
+            // Use DataStore recipes for the sidebar
+            model.addAttribute("tab", tab);
+            model.addAttribute("recipes", dataStore.getRecipes(userId));
+            model.addAttribute("favorites", dataStore.getFavorites(userId));
+            model.addAttribute("recipeById", recipe);
+            return "viewRecipe";
+
+    }
+
+    @GetMapping("/favoriteRecipe")
+    public String favoriteRecipe(@RequestParam int id, @RequestParam(required=false, defaultValue="history") String tab){
+        int userId = userBean.getUser().getId();
+        dataStore.toggleFavorite(userId, id);
+
+
+        return "redirect:/viewRecipe?id=" + id + "&tab="+tab;
+    }
+
+    @GetMapping("/deleteRecipe")
+    public String deleteRecipe(@RequestParam int id){
+        int userId = userBean.getUser().getId();
+        Recipe recipe = dataStore.getRecipeById(userId, id);
+
+        dataStore.deleteRecipe(userId, recipe.getId());
+        return "redirect:/home";
     }
 
 
