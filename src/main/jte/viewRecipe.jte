@@ -1,30 +1,27 @@
-@param java.util.List<cs3220.aiapplication.model.Ingredient> ingredients
+@param cs3220.aiapplication.model.Recipe recipeById
 @param java.util.List<cs3220.aiapplication.model.Recipe> recipes
 @param java.util.List<cs3220.aiapplication.model.Recipe> favorites
 @param String tab
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <!-- in page style sheet -->
     <style>
         body {
             overflow-x: hidden;
-
             background-color: lightgray;
 
         }
-
-        header {
+        header{
             font-size: 50px;
             border-bottom: black 2px solid;
-            color: black;
+
         }
         /* clickable title */
         .title, .title a{
@@ -36,11 +33,13 @@
         .title:hover{
             transform: scale(1.05);
         }
+
         /* profile icon */
         .profile {
             font-size: 50px;
             text-align: right;
             justify-self: right;
+            color: black;
         }
 
         .menu {
@@ -49,15 +48,15 @@
             justify-self: center;
             width: 228px;
         }
-        /* History and Favorites Tabs Button */
+
+        /* History and Favorites Tabs */
         .menu-btns{
             text-decoration: none;
             justify-self: center;
             justify-content: center;
             text-align: center;
         }
-
-        /* history cards */
+        /* Histoty Cards */
         .history-item {
             display: flex;
             flex-direction: column;
@@ -66,39 +65,21 @@
             border-radius: 10px;
             padding: 10px;
             margin-top: 10px;
+            max-height:300px;
+            overflow-y:auto;
+            padding-right: 5px;
         }
 
-        /* Results Blocks */
-        .result-card{
-            background: white;
-            border-radius: 10px;
-        }
-
-        .history-btn{
-            text-decoration: none;
-            color: black;
-        }
-        /* orange favorite button */
-        .favorite-button {
-            display: flex;
-            float: right;
-            border: 2px solid orange;
-        }
-        /* inventory button */
-        .inventory {
-            margin-top: auto;
-            padding: 20px;
-            justify-self: center;
-            text-align: center;
-
-        }
-        /* sidebar button */
         .sidebar {
             width: 250px;
             transition: all 0.3s;
             background-color: lightgray;
             color: black;
             border-right: black 2px solid;
+
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x:hidden;
         }
         .sidebar.collapsed {
             margin-left: -250px;
@@ -117,28 +98,17 @@
             background-color: lightgray;
         }
 
-        header.navbar{
-            background-color: lightgray;
-            color: black;
-        }
+        .inventory {
+            margin-top: auto;
+            padding: 20px;
+            justify-self: center;
+            text-align: center;
 
-        /* Hide the delete icon for tables by default */
-        .delete-icon {
-            opacity: 0;
-        }
-
-        /* Show the delete icon when the parent row is hovered */
-        tr:hover .delete-icon {
-            opacity: 1;
-        }
-        th, td {
-            font-size: large;
         }
 
 
     </style>
 </head>
-
 <body>
 
 <!-- Header -->
@@ -161,12 +131,20 @@
     <div class="menu">
         <h1 class="mb-0">Menu</h1>
     </div>
-    <div class="menu-btns">
-        <div class="btn-group" role="group" aria-label="Navigation button group">
-            <a href="/inventory?tab=history" class="btn btn-outline-secondary btn-lg">History</a>
-            <a href="/inventory?tab=favorites" class="btn btn-outline-secondary btn-lg">Favorites</a>
-        </div>
+    <div class="btn-group" role="group" aria-label="Navigation button group">
+        <a href="/viewRecipe?id=${recipeById.getId()}&tab=history"
+           class="btn btn-lg ${tab.equals("history") ? "btn-secondary" : "btn-outline-secondary"}">
+            History
+        </a>
+
+        <a href="/viewRecipe?id=${recipeById.getId()}&tab=favorites"
+           class="btn btn-lg ${tab.equals("favorites") ? "btn-secondary" : "btn-outline-secondary"}">
+            Favorites
+        </a>
     </div>
+
+
+
     <h6 class="mt-3">Recent Recipes</h6>
     <!--    similar to Lab6 create a List of History and load them using for loop-->
     <ul class="history-item">
@@ -176,7 +154,7 @@
                 <li>No Recept Recipes...</li>
             @endif
             @for(var recipe: favorites)
-                <a href="viewRecipe?id=${recipe.getId()}" class="nav-link">
+                <a href="viewRecipe?id=${recipe.getId()}&tab=${tab}" class="nav-link">
                     <div>
                         <small>#${recipe.getId()}</small>
                         <strong>${recipe.getTitle()}</strong><br>
@@ -191,7 +169,7 @@
                 <li>No Recept Recipes...</li>
             @endif
             @for(var recipe: recipes)
-                <a href="viewRecipe?id=${recipe.getId()}" class="nav-link">
+                <a href="viewRecipe?id=${recipe.getId()}&tab=${tab}" class="nav-link">
                     <div>
                         <small>#${recipe.getId()}</small>
                         <strong>${recipe.getTitle()}</strong><br>
@@ -208,49 +186,20 @@
     </div>
 </div>
 
-<main id="content" class="content p-4 d-flex flex-column justify content-center align-items-center">
-    <h1>Ingredients</h1>
-    <form id="inventoryForm" action="inventory" method="post">
-        @if( ingredients != null && !ingredients.isEmpty())
-        <table id="ingredientsTable" class="table table-hover table-bordered table-striped">
-            <thead>
-            <tr>
-                <th></th>
-                <th>Ingredient</th>
-                <th>Quantity</th>
-                <th>Options</th>
-            </tr>
-            </thead>
-            <tbody id="ingredientsBody">
+<main id="content" class="content p-4 d-flex flex-column " style="min-height: 80vh;">
 
-                @for(int i = 0; i < ingredients.size(); i++)
-                    <tr>
-<%--                        unique ingredient number starting from 1--%>
-                        <td>
-                            ${i + 1}.
-                        </td>
-                        <td>
-                          ${ingredients.get(i).getName()}
-                        </td>
-                        <td>
-                               ${ingredients.get(i).getQuantity()}
-                        </td>
-                        <td><a href="edit/${ingredients.get(i).getId()}">Edit</a> | <a href="delete/${ingredients.get(i).getId()}" onclick="return confirm('Are you sure you want to Delete?');">Delete</a></td>
-                    </tr>
-                @endfor
-            @else
-                <div class="centered-text-div"> No Ingredients added...</div><br>
-            @endif
-            </tbody>
+    <a href="home" class="btn btn-secondary mb-3">&larr; Back Home</a>
+    <a href="/favoriteRecipe?id=${recipeById.getId()}&tab=${tab}" class="btn btn-warning">${recipeById.isFavorite() ? "Unfavorite" : "Favorite"}</a>
+    <a href="/deleteRecipe?id=${recipeById.getId()}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this recipe?');">Delete Recipe</a>
 
+<h1>${recipeById.getTitle()}</h1>
+<p>Date: ${recipeById.getDate().toString()}</p>
+<p>Main Ingredients: ${recipeById.getMainIngredients()}</p>
 
-        </table>
-        <a href="/addIngredientPage" class="btn btn-primary">Add Ingredient</a>
-
-    </form>
-
-
+<h2>Instructions</h2>
+<p>${recipeById.getContent()}</p>
 </main>
+
 
 <script>
     const sidebar = document.getElementById("sidebar");
@@ -285,8 +234,5 @@
     if (toggleBtn) toggleBtn.addEventListener("click", toggleSidebar);
     if (toggleBtnMobile) toggleBtnMobile.addEventListener("click", toggleSidebar);
 </script>
-
-
-
 </body>
 </html>

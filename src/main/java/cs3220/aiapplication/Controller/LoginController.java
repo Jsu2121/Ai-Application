@@ -42,6 +42,26 @@ public class LoginController {
         return "redirect:/";
     }
 
+    @GetMapping("/createAccount")
+    public String createAccount(){
+        return "createAccountPage";
+    }
+
+    @PostMapping("/newAccount")
+    public String newAccount(@RequestParam("email") String email, @RequestParam("password") String password){
+       if(dataStore.userExists(email)){
+           return "createAccountPage";
+       }
+
+       User newUser = dataStore.createUser(email, password);
+
+       userBean.setUser(newUser);
+       userBean.isLoggedIn();
+
+       return "redirect:/home";
+
+    }
+
 
 
 }

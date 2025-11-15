@@ -35,4 +35,10 @@ public class UserBean {
     public void addExchange(Exchange exchange){
         exchangeHistory.add(exchange);
     }
+
+    public void setUser(User user){
+        this.user = user;
+    }
+
+
 }

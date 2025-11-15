@@ -85,10 +85,7 @@
 </form>
 
 <p>
-    <a href="#">Forgot password?</a>
-</p>
-<p>
-    <a href="#">Create Account</a>
+    <a href="createAccount">Create Account</a>
 </p>
 
 <footer
