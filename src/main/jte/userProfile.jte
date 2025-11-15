@@ -61,8 +61,8 @@
         <button><a href="/logout">Log Out</a></button>
     </div>
 </header>
-<p>Total Recipes: ${recipeHistory.size()}</p>
-<p>Favorite Recipes: ${favoriteHistory.size()}</p>
+<p>Total Recipes: (${recipeHistory.size()}) | <a href="/home?tab=history">View Recipes</a></p>
+<p>Favorite Recipes: (${favoriteHistory.size()}) | <a href="/home?tab=favorites">View Favorites</a></p>
 <p>Ingredients: (${ingredientCount}) | <a href="inventory">View Inventory</a></p>
 <p></p>
 

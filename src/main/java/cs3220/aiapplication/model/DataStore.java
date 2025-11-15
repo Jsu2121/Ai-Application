@@ -11,6 +11,14 @@ public class DataStore {
     private final Map<Integer, List<String>> exchangeHistory = new HashMap<>();
     private final Map<Integer, List<Recipe>> userRecipes = new HashMap<>();
 
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
     private int index = 1;
 
     public DataStore() {
@@ -22,6 +30,35 @@ public class DataStore {
         for(User u : users){
             userIngredients.put(u.getId(), new ArrayList<>());
         }
+
+        // start the root with some ingredients
+        addIngredient(1, new Ingredient(1, "Milk", "2 Gallons"));
+        addIngredient(1, new Ingredient(2, "Sugar", "4 lbs"));
+        addIngredient(1, new Ingredient(3, "Butter", "4 Sticks"));
+        addIngredient(1, new Ingredient(4, "Vanilla Extract", "10 Tablespoons"));
+        addIngredient(1, new Ingredient(5, "Flour", "2 lbs"));
+        addIngredient(1, new Ingredient(6, "Salt", "1 lbs"));
+        addIngredient(1, new Ingredient(7, "Eggs", "12"));
+        addIngredient(1, new Ingredient(8, "Baking Powder", "10 Tablespoons"));
+        addIngredient(1, new Ingredient(9, "Strawberries", "20"));
+        addIngredient(1, new Ingredient(10, "Vegetable Oil", "48 Fl Oz"));
+    }
+
+
+    public User createUser(String email, String password){
+        int newId = users.size() + 1;
+        User newUser = new User(newId, email, password);
+        users.add(newUser);
+
+        userIngredients.put(newId, new ArrayList<>());
+        userRecipes.put(newId, new ArrayList<>());
+
+        return newUser;
+    }
+
+    // check if a user exists in system using their email
+    public boolean userExists(String email){
+        return users.stream().anyMatch(u -> u.getEmail().equalsIgnoreCase(email));
     }
 
 

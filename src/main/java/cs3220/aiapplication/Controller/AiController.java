@@ -50,6 +50,32 @@ public class AiController {
        }
     }
 
+    private String extractTitle(String aiResponse) {
+        return aiResponse.lines()
+                .filter(line -> line.startsWith("Title:"))
+                .map(line -> line.replace("Title:", "").trim())
+                .findFirst()
+                .orElse("Untitled Recipe");
+    }
+
+    private String extractMainIngredients(String aiResponse) {
+        List<String> lines = aiResponse.lines().toList();
+        List<String> ingredients = new ArrayList<>();
+        boolean inIngredients = false;
+
+        for (String line : lines) {
+            if (line.startsWith("Main Ingredients")) {
+                inIngredients = true;
+                continue;
+            }
+            if (inIngredients) {
+                if (line.startsWith("Instructions")) break;
+                if (!line.isBlank()) ingredients.add(line.trim());
+            }
+        }
+
+        return String.join("\n", ingredients);
+    }
 
 
     @GetMapping("/home")
@@ -81,16 +107,23 @@ public class AiController {
         System.out.println("Ingredients: " + ingredientsName);
         String ingredients = String.join(", ", ingredientsName);
         System.out.println("Ingredients String: " + ingredients);
-        String userPrompt = "Using these ingredients: " + ingredients +
-                ", " +  prompt +
-                ". Generate a recipe with suitable for a " + cookingLevel + " cook. " + "Include a clear a title, a list of main ingredients, and instructions. (Format the response with 'Title: <title>', 'Main Ingredients:', and 'Instructions:')";
+        String userPrompt =
+                "Using ONLY these ingredients as the base: " + ingredients + ", " +
+                        "create a recipe based on: " + prompt + ". " +
+                        "The recipe must follow this exact format:\n\n" +
+                        "Title: <short recipe title>\n" +
+                        "Main Ingredients:\n" +
+                        "- List only 3 to 5 main ingredients from the provided ingredient list. No extras.\n" +
+                        "Instructions:\n" +
+                        "<simple clear steps suitable for a " + cookingLevel + " cook>\n\n" +
+                        "IMPORTANT RULES:\n" +
+                        "- Main Ingredients list must contain ONLY 3–5 items.\n" +
+                        "- Keep the output clean and formatted exactly with the three sections.";
 
         String aiResponse = realChat(userPrompt);
-        String mainIngredients = aiResponse.lines().filter(line -> line.startsWith("Main Ingredients:")).findFirst().orElse("Main Ingredients: Not found").replace("Main Ingredients:", ""
-                ).trim();
+        String mainIngredients = extractMainIngredients(aiResponse);
 
-        String title = aiResponse.lines().findFirst().orElse("Untitled Recipe").replace("Title: ", ""
-                ).trim();
+        String title = extractTitle(aiResponse);
 
         Recipe recipe = new Recipe(
                 dataStore.getNextRecipeId(),
